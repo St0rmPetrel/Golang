@@ -2,10 +2,16 @@ package main
 
 import (
 	"fmt"
-	"github.com/St0rmPetrel/Golang/tree/master/greetings"
+	"log"
+	"github.com/St0rmPetrel/Golang/greetings"
 )
 
 func main() {
-	message := greetings.Hello("Telman")
+	log.SetPrefix("greetings: ")
+	log.SetFlags(0)
+	message, err := greetings.Hello("")
+	if err != nil {
+		log.Fatal(err)
+	}
 	fmt.Println(message)
 }

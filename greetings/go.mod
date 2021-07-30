@@ -1,3 +1,3 @@
-module github.com/St0rmPetrel/Golang/tree/master/greetings
+module github.com/St0rmPetrel/Golang/greetings
 
 go 1.16

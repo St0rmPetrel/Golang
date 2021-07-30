@@ -1,3 +1,3 @@
-module github.com/St0rmPetrel/Golang/tree/master/hello
+module example.com/m
 
 go 1.16

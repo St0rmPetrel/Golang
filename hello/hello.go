@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/St0rmPetrel/Golang/tree/master/greetings"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	message := greetings.Hello("Telman")
+	fmt.Println(message)
 }

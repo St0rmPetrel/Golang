@@ -1,14 +1,14 @@
 package core
 
 type Result struct {
-	mean	float32
-	median	float32
-	mode	float32
-	sd		float32
+	Mean	float32
+	Median	float32
+	Mode	float32
+	Sd		float32
 }
 
-func Calculate(ch chan int) result {
-	var ret result
+func Calculate(ch chan int) Result {
+	var ret Result
 
 	for {
 		res, ok := <-ch

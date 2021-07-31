@@ -5,46 +5,25 @@ import (
 	"github.com/St0rmPetrel/Golang/day_00/core"
 )
 
-//type Result struct {
-//	mean	float32
-//	median	float32
-//	mode	float32
-//	sd		float32
-//}
-
 func main() {
 	ch := make(chan int, 5)
 	flags := init_flags()
 	go read_num(ch)
 	res := core.Calculate(ch)
-	res.print(flags)
+	print_res(&res, &flags)
 }
 
-func (res *core.Result) print(f flags) {
+func print_res(res *core.Result, f *flags) {
 	if (f.mean) {
-		fmt.Printf("Mean:\t%.2f\n", res.mean)
+		fmt.Printf("Mean:\t%.2f\n", res.Mean)
 	}
 	if (f.median) {
-		fmt.Printf("Median:\t%.2f\n", res.median)
+		fmt.Printf("Median:\t%.2f\n", res.Median)
 	}
 	if (f.mode) {
-		fmt.Printf("Mode:\t%.2f\n", res.mode)
+		fmt.Printf("Mode:\t%.2f\n", res.Mode)
 	}
 	if (f.sd) {
-		fmt.Printf("Std dec:\t%.2f\n", res.sd)
+		fmt.Printf("SDec:\t%.2f\n", res.Sd)
 	}
 }
-
-//func calculate(ch chan int) result {
-//	var ret result
-//
-//	for {
-//		res, ok := <-ch
-//		if ok == false {
-//			println("Channel Close ")
-//			break
-//		}
-//		println("Channel Open :", res)
-//	}
-//	return ret
-//}

@@ -22,7 +22,7 @@ func print_res(res *core.Result, f *flags) {
 		fmt.Printf("Median:\t%.2f\n", res.Median)
 	}
 	if f.mode {
-		fmt.Printf("Mode:\t%.2f\n", res.Mode)
+		fmt.Printf("Mode:\t%d\n", res.Mode)
 	}
 	if f.sd {
 		fmt.Printf("SDec:\t%.2f\n", res.Sd)

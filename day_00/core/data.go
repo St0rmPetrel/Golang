@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"math"
 	"sort"
 )
 
@@ -36,14 +37,14 @@ func (d *data) store_data(ch chan int) {
 	sort.Ints(d.order_keys)
 }
 
-func (d *data) calculate_median() float32 {
+func (d *data) calculate_median() float64 {
 	if d.size%2 != 0 {
 		ret, _ := d.find_index((d.size - 1) / 2)
-		return float32(ret)
+		return float64(ret)
 	}
 	left, _ := d.find_index((d.size - 1) / 2)
 	right, _ := d.find_index(d.size / 2)
-	return float32(left+right) / 2.0
+	return float64(left+right) / 2.0
 }
 
 func (d *data) find_index(id uint) (int, error) {
@@ -59,4 +60,30 @@ func (d *data) find_index(id uint) (int, error) {
 		}
 	}
 	return 0, e
+}
+
+func (d *data) calculate_mode() int {
+	freq_max := uint(1)
+	key_ret := d.order_keys[0]
+	for key := range d.order_keys {
+		if d.frequency[key] > freq_max {
+			key_ret = key
+			freq_max = d.frequency[key]
+		}
+	}
+	return (key_ret)
+}
+
+func (d *data) calculate_sd() float64 {
+	var sd float64 = 0
+
+	mean := d.calculate_mean()
+	for k, v := range d.frequency {
+		sd += float64(v) * math.Pow(float64(k)-mean, 2)
+	}
+	return math.Sqrt(sd / float64(d.size))
+}
+
+func (d *data) calculate_mean() float64 {
+	return (d.sum / float64(d.size))
 }

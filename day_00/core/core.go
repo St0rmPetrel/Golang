@@ -5,10 +5,10 @@ import (
 )
 
 type Result struct {
-	Mean   float32
-	Median float32
-	Mode   float32
-	Sd     float32
+	Mean   float64
+	Median float64
+	Mode   int
+	Sd     float64
 }
 
 func Calculate(ch chan int) Result {
@@ -20,7 +20,9 @@ func Calculate(ch chan int) Result {
 		println("Empty Input")
 		os.Exit(1)
 	}
-	ret.Mean = float32(d.sum / float64(d.size))
+	ret.Mean = d.calculate_mean()
 	ret.Median = d.calculate_median()
+	ret.Mode = d.calculate_mode()
+	ret.Sd = d.calculate_sd()
 	return ret
 }

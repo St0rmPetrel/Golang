@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/St0rmPetrel/Golang/day_00/core"
 )
 
@@ -14,16 +15,16 @@ func main() {
 }
 
 func print_res(res *core.Result, f *flags) {
-	if (f.mean) {
+	if f.mean {
 		fmt.Printf("Mean:\t%.2f\n", res.Mean)
 	}
-	if (f.median) {
+	if f.median {
 		fmt.Printf("Median:\t%.2f\n", res.Median)
 	}
-	if (f.mode) {
+	if f.mode {
 		fmt.Printf("Mode:\t%.2f\n", res.Mode)
 	}
-	if (f.sd) {
+	if f.sd {
 		fmt.Printf("SDec:\t%.2f\n", res.Sd)
 	}
 }

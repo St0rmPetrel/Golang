@@ -6,10 +6,10 @@ import (
 )
 
 type flags struct {
-	mean	bool
-	median	bool
-	mode	bool
-	sd		bool
+	mean   bool
+	median bool
+	mode   bool
+	sd     bool
 }
 
 func init_flags() flags {
@@ -21,7 +21,7 @@ func init_flags() flags {
 	flag.BoolVar(&(f.sd), "sd", false, "display standard deviation")
 	flag.Parse()
 	tail := flag.Args()
-	if (len(tail) != 0) {
+	if len(tail) != 0 {
 		println("Wrong number of arguments")
 		os.Exit(1)
 	}

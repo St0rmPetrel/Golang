@@ -2,9 +2,9 @@ package main
 
 import (
 	"bufio"
+	"log"
 	"os"
 	"strconv"
-	"log"
 )
 
 func read_num(ch chan int) {
@@ -14,7 +14,7 @@ func read_num(ch chan int) {
 		if str != "" {
 			str = str[:(len(str) - 1)]
 			i, err := strconv.Atoi(str)
-			if (err != nil) {
+			if err != nil {
 				log.Fatal(err)
 			}
 			ch <- i

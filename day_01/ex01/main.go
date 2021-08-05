@@ -8,28 +8,39 @@ import (
 )
 
 func main() {
-	name, err_flag := flag_init()
+	name_old, name_new, err_flag := flag_init()
 	log.SetFlags(0)
 	if err_flag != nil {
 		log.Fatal(err_flag)
 	}
-	db := db.NewDB()
-	err_load := db.LoadData(name)
-	if err_load != nil {
-		log.Fatal(err_load)
+	if name_old == name_new {
+		return
 	}
-	db.PrintData()
+	db_new := db.NewDB()
+	db_old := db.NewDB()
+	err_load_old := db_old.LoadData(name_old)
+	if err_load_old != nil {
+		log.Fatal(err_load_old)
+	}
+	err_load_new := db_new.LoadData(name_new)
+	if err_load_new != nil {
+		log.Fatal(err_load_new)
+	}
+	//db.PrintData()
+	//diff := db_old.Compare(db_new)
+	//diff.Print()
 }
 
-func flag_init() (string, error) {
-	var name string
+func flag_init() (string, string, error) {
+	var name_old, name_new string
 
-	flag.StringVar(&name, "f", "", "file for load data")
+	flag.StringVar(&name_old, "old", "", "file for load data")
+	flag.StringVar(&name_new, "new", "", "file for load data")
 	flag.Parse()
-	if (name == "") || (flag.NArg() != 0) {
-		return name, &BadFlagError{}
+	if name_old == "" || name_new == "" || flag.NArg() != 0 {
+		return name_old, name_new, &BadFlagError{}
 	}
-	return name, nil
+	return name_old, name_new, nil
 }
 
 type BadFlagError struct {

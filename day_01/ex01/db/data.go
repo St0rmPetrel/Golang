@@ -23,8 +23,8 @@ type Ingredient struct {
 }
 
 func (d *Recipes) Sort() {
-	for cake, _ := range d.Cake {
-		sort.Sort(cake.Ingredient)
+	for _, cake := range d.Cake {
+		sort.Sort(&cake)
 	}
 	sort.Sort(d)
 }

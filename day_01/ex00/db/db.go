@@ -20,6 +20,7 @@ func (db *DataBase) LoadData(name string) error {
 		return err
 	}
 	db.Data, err = reader.Read()
+	//	db.Data.Sort()
 	return err
 }
 

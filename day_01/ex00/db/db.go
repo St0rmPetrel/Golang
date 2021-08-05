@@ -1,42 +1,40 @@
 package db
 
 import (
+	"encoding/json"
+	"encoding/xml"
 	"fmt"
-	"io/ioutil"
-	"os"
-	"path/filepath"
 )
 
-type DBReader interface {
-	Read() (*Recipes, error)
+type DataBase struct {
+	Data *Recipes
 }
 
-func GetDBReader(name string) (DBReader, error) {
-	var f *os.File
-	var err error
-	var b []byte
+func NewDB() *DataBase {
+	return new(DataBase)
+}
 
-	f, err = os.Open(name)
+func (db *DataBase) LoadData(name string) error {
+	reader, err := GetDBReader(name)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	defer f.Close()
-	b, err = ioutil.ReadAll(f)
+	db.Data, err = reader.Read()
+	return err
+}
+
+func (db DataBase) PrintData() error {
+	b, err := db.marshal()
 	if err != nil {
-		return nil, err
+		return err
 	}
-	if is_json, _ := filepath.Match("*.json", filepath.Base(name)); is_json {
-		return DataJSON{b}, nil
-	} else if is_xml, _ := filepath.Match("*.xml", filepath.Base(name)); is_xml {
-		return DataXML{b}, nil
-	}
-	return nil, &BadExtensionError{name}
+	fmt.Println(string(b))
+	return nil
 }
 
-type BadExtensionError struct {
-	name string
-}
-
-func (e *BadExtensionError) Error() string {
-	return fmt.Sprintf("bad filename extension in \"%s\"", e.name)
+func (db DataBase) marshal() ([]byte, error) {
+	if db.Data.XMLName.Local != "" {
+		return json.MarshalIndent(db.Data, "", "    ")
+	}
+	return xml.MarshalIndent(db.Data, "", "    ")
 }

@@ -63,27 +63,40 @@ func (d Cake) Compare(src Cake) {
 		fmt.Print("CHANGED cooking time for cake ")
 		fmt.Printf("\"%s\" - \"%s\" instead of \"%s\"\n", d.Name, d.Time, src.Time)
 	}
-//	for _,  := range src.Data.Cake {
-//		if is_in_db, id := db.find(cake); is_in_db  {
-//			db.Data.Cake[id].Compare(cake)
-//		} else {
-//			fmt.Printf("ADDED cake \"%s\"\n", cake.Name)
-//		}
-//	}
-//	for _, cake := range db.Data.Cake {
-//		if is_in_db, _ := src.find(cake); !is_in_db {
-//			fmt.Printf("REMOVED cake \"%s\"\n", cake.Name)
-//		}
-//	}
+	for _, ingrd := range src.Ingredient {
+		if is_in_cake, id := d.find(ingrd); is_in_cake  {
+			d.Ingredient[id].Compare(ingrd, src)
+		} else {
+			fmt.Printf("ADDED ingredient \"%s\"\n", ingrd.Name)
+		}
+	}
+	for _, ingrd := range d.Ingredient {
+		if is_in_cake, _ := src.find(ingrd); !is_in_cake {
+			fmt.Printf("REMOVED ingredient \"%s\"\n", ingrd.Name)
+		}
+	}
 }
 
-//func (db ) find(key Cake) bool {
-//	cake_id := sort.Search(len(db.Data.Cake), func(i int) bool {
-//		return db.Data.Cake[i].Name >= key.Name
-//	})
-//	if cake_id < 0 || key.Name != db.Data.Cake[cake_id].Name {
-//		return false, 0
-//	}
-//	return true, cake_id
-//	return true
-//}
+func (d Cake) find(key Ingredient) (bool, int) {
+	id := sort.Search(len(d.Ingredient), func(i int) bool {
+		return d.Ingredient[i].Name >= key.Name
+	})
+	if id < 0 || key.Name != d.Ingredient[id].Name {
+		return false, 0
+	}
+	return true, id
+}
+
+func (d Ingredient) Compare(src Ingredient, c Cake) {
+	if d.Unit == src.Unit {
+		if d.Count != src.Count {
+			fmt.Print("CHANGED unit count for ingredient ")
+			fmt.Printf("\"%s\" for cake \"%s\" - ", d.Name, c.Name)
+			fmt.Printf("\"%s\" instead of \"%s\"\n", d.Count, src.Count)
+		}
+	} else {
+		fmt.Print("CHANGED unit for ingredient ")
+		fmt.Printf("\"%s\" for cake \"%s\" - ", d.Name, c.Name)
+		fmt.Printf("\"%s\" instead of \"%s\"\n", d.Unit, src.Unit)
+	}
+}

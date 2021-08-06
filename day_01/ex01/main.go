@@ -26,9 +26,7 @@ func main() {
 	if err_load_new != nil {
 		log.Fatal(err_load_new)
 	}
-	//db.PrintData()
-	//diff := db_old.Compare(db_new)
-	//diff.Print()
+	db_old.Compare(*db_new)
 }
 
 func flag_init() (string, string, error) {

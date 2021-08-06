@@ -35,6 +35,22 @@
           "ingredient_unit": "mug"
         }
       ]
+    },
+    {
+      "name": "Apple cake",
+      "time": "30 min",
+      "ingredients": [
+        {
+          "ingredient_name": "Apple",
+          "ingredient_count": "1",
+          "ingredient_unit": "piece"
+        },
+        {
+          "ingredient_name": "Flour",
+          "ingredient_count": "1",
+          "ingredient_unit": "mug"
+        }
+      ]
     }
   ]
 }

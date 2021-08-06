@@ -3,6 +3,7 @@ package db
 import (
 	"encoding/xml"
 	"sort"
+	"fmt"
 )
 
 type Recipes struct {
@@ -56,3 +57,33 @@ func (d *Cake) Swap(i, j int) {
 	d.Ingredient[i] = d.Ingredient[j]
 	d.Ingredient[j] = tmp
 }
+
+func (d Cake) Compare(src Cake) {
+	if d.Time != src.Time {
+		fmt.Print("CHANGED cooking time for cake ")
+		fmt.Printf("\"%s\" - \"%s\" instead of \"%s\"\n", d.Name, d.Time, src.Time)
+	}
+//	for _,  := range src.Data.Cake {
+//		if is_in_db, id := db.find(cake); is_in_db  {
+//			db.Data.Cake[id].Compare(cake)
+//		} else {
+//			fmt.Printf("ADDED cake \"%s\"\n", cake.Name)
+//		}
+//	}
+//	for _, cake := range db.Data.Cake {
+//		if is_in_db, _ := src.find(cake); !is_in_db {
+//			fmt.Printf("REMOVED cake \"%s\"\n", cake.Name)
+//		}
+//	}
+}
+
+//func (db ) find(key Cake) bool {
+//	cake_id := sort.Search(len(db.Data.Cake), func(i int) bool {
+//		return db.Data.Cake[i].Name >= key.Name
+//	})
+//	if cake_id < 0 || key.Name != db.Data.Cake[cake_id].Name {
+//		return false, 0
+//	}
+//	return true, cake_id
+//	return true
+//}

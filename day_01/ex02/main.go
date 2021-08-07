@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"flag"
-	"fmt"
 	"log"
 	"os"
 )
@@ -31,16 +29,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func diff(f_o, f_n *os.File) error {
-	r_n := bufio.NewReader(f_n)
-	r_o := bufio.NewReader(f_o)
-	str_n, _ := r_n.ReadString('\n')
-	fmt.Println(str_n)
-	str_o, _ := r_o.ReadString('\n')
-	fmt.Println(str_o)
-	return nil
 }
 
 func flag_init() (string, string, error) {

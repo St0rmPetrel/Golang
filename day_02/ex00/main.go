@@ -10,9 +10,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err := Find(dir, f); err != nil {
-		log.Fatal(err)
-	}
+	Find(dir, f)
 }
 
 type Flags struct {

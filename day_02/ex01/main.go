@@ -3,17 +3,25 @@ package main
 import (
 	"flag"
 	"log"
+	"sync"
 )
 
 func main() {
-	f, err := flag_init()
+	var wg sync.WaitGroup
+	var mprint sync.Mutex
+
+	fl, args, err := flag_init()
 	if err != nil {
 		log.Fatal(err)
 	}
-	println(f.l, f.m, f.w)
+	for _, arg := range args {
+		wg.Add(1)
+		go wc(arg, fl, &wg, &mprint)
+	}
+	wg.Wait()
 }
 
-func flag_init() (Flags, error) {
+func flag_init() (Flags, []string, error) {
 	var l, m, w bool
 
 	flag.BoolVar(&l, "l", false, "counting lines")
@@ -21,12 +29,12 @@ func flag_init() (Flags, error) {
 	flag.BoolVar(&w, "w", false, "counting words")
 	flag.Parse()
 	if flag.NArg() < 1 || flag.NFlag() > 1 {
-		return Flags{}, &ArgError{}
+		return Flags{}, nil, &ArgError{}
 	}
 	if !l && !m && !w {
 		w = true
 	}
-	return Flags{l, m, w}, nil
+	return Flags{l, m, w}, flag.Args(), nil
 }
 
 type Flags struct {

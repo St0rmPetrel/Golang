@@ -10,13 +10,17 @@ import (
 func Find(d string, f Flags) {
 	entry, _ := os.ReadDir(d)
 	for _, file := range entry {
+		fi, err := file.Info()
+		if err != nil {
+			continue
+		}
 		name := addPrefix(file.Name(), d)
 		if file.IsDir() {
 			if f.d {
 				fmt.Printf("%s\n", name)
 			}
 			Find(name, f)
-		} else if fi, _ := file.Info(); fi.Mode()&os.ModeSymlink != 0 {
+		} else if fi.Mode()&os.ModeSymlink != 0 {
 			if f.sl {
 				printLink(name)
 			}

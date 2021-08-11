@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"net"
 	"os"
 )
@@ -24,19 +23,30 @@ func main() {
 		println(fmt.Sprintf("Error: name: \"%s\" is exist", user_name))
 		return
 	}
-	start_session(conn)
+	session(conn)
 }
 
-func start_session(conn net.Conn) {
+func session(conn net.Conn) {
+	go receive_msgs(conn)
 	for {
 		fmt.Print("-> ")
 		msg, _ := bufio.NewReader(os.Stdin).ReadString('\n')
-		log.Print(msg)
 		_, err := fmt.Fprint(conn, msg)
 		if err != nil {
 			println("Connection with server is lost")
 			break
 		}
+	}
+}
+
+func receive_msgs(conn net.Conn) {
+	for {
+		msg, err := bufio.NewReader(conn).ReadString('\n')
+		if err != nil {
+			println("Connection with server is lost")
+			os.Exit(1)
+		}
+		fmt.Print("\r\n" + msg)
 	}
 }
 

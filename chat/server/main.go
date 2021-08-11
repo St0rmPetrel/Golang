@@ -5,52 +5,74 @@ import (
 	"fmt"
 	"log"
 	"net"
-)
-
-var (
-	users map[string]net.Conn
+	"strings"
 )
 
 func main() {
-	ln, err := net.Listen("tcp", ":8080")
+	addr := ":8080"
+	ln, err := net.Listen("tcp", addr)
 	if err != nil {
 		log.Fatal(err)
 	}
-	users = make(map[string]net.Conn)
+	log.Printf("Chat server is UP, addr = \"%s\"\n", addr)
+	users := NewUsers()
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
 			log.Printf("Error: %s\n", err)
 			continue
 		}
-		go handleConnection(conn)
+		go handleConnection(conn, users)
 	}
 }
 
-func handleConnection(conn net.Conn) {
+func handleConnection(conn net.Conn, users *Users) {
 	defer conn.Close()
-	var (
-		user_name string
-	)
-	fmt.Fscanln(conn, &user_name)
-	log.Printf("User: \"%s\" try to connect...\n", user_name)
-	if _, ok := users[user_name]; ok {
-		fmt.Fprintln(conn, "false")
-		log.Printf("User: \"%s\" connection refuse\n", user_name)
+	if err := users.Add(conn); err != nil {
+		log.Printf("User add Error: %s\n", err)
 		return
 	}
-	users[user_name] = conn
-	defer delete(users, user_name)
-	fmt.Fprintln(conn, "true")
-	log.Printf("User: \"%s\" connection accept\n", user_name)
+	defer users.Delete(conn)
+	session(conn, *users)
+}
 
+func session(conn net.Conn, users Users) {
 	for {
-		msg, err := bufio.NewReader(conn).ReadString('\n')
+		req, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
-			log.Printf("User: \"%s\" connetion is lost\n", user_name)
+			log.Printf("User: \"%s\" connetion is lost\n", users.mirror[conn])
 			break
 		}
-		fmt.Printf("%s: %s", user_name, msg)
+		dest, msg := parseRequese(req)
+		if msg == "" {
+			continue
+		} else if dest == "all" {
+			broadSend(msg, users, conn)
+		}
 	}
-	log.Printf("Delete user \"%s\"\n", user_name)
+}
+
+func parseRequese(req string) (dest, msg string) {
+	if !strings.HasPrefix(req, "@") {
+		return "all", req[:len(req)-1]
+	}
+	if id := strings.Index(req, " "); id > 0 {
+		return req[1:id], req[id+1 : len(req)-1]
+	}
+	return req[1 : len(req)-1], ""
+}
+
+func broadSend(msg string, users Users, conn net.Conn) {
+	log.Printf("User \"%s\" send messege \"%s\" broadcast", users.mirror[conn],
+		msg)
+	for _, users_conn := range users.name {
+		if users.mirror[conn] != users.mirror[users_conn] {
+			_, err := fmt.Fprintln(users_conn, users.mirror[conn]+": "+msg)
+			if err != nil {
+				log.Printf("Error: Bad connection to user:%s\n",
+					users.mirror[users_conn])
+				continue
+			}
+		}
+	}
 }

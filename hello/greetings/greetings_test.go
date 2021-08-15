@@ -8,3 +8,7 @@ func TestHello(t *testing.T) {
 		t.Errorf("Hello() = %q, want %q", got, want)
 	}
 }
+
+func TestMy(t *testing.T) {
+	t.Errorf("Hello")
+}

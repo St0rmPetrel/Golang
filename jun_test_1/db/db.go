@@ -17,7 +17,7 @@ type Hacker struct {
 
 var ctx = context.Background()
 
-func (rdb *DB) LoadData(data *[]Hacker) error {
+func (rdb *DB) loadData(data *[]Hacker) error {
 	ret := rdb.client.ZRangeWithScores(ctx, "hackers", 0, -1)
 	if ret.Err() != nil {
 		return ret.Err()

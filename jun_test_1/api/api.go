@@ -15,8 +15,8 @@ func Up(dataBase *db.DB) {
 }
 
 func returnHackers(c *fiber.Ctx) error {
-	data := db.NewData()
-	if err := rdb.LoadData(&data); err != nil {
+	data, err := rdb.TakeDataWithCache()
+	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).
 			SendString(err.Error())
 	}

@@ -8,10 +8,15 @@ import (
 var rdb *db.DB
 
 func Up(dataBase *db.DB) {
+	app := setupApp(dataBase)
+	app.Listen(":8010")
+}
+
+func setupApp(dataBase *db.DB) *fiber.App {
 	rdb = dataBase
 	app := fiber.New()
 	app.Get("/json/hackers", returnHackers)
-	app.Listen(":8010")
+	return app
 }
 
 func returnHackers(c *fiber.Ctx) error {
